@@ -1,7 +1,3 @@
-// analogRead values go from 0 to 1023, analogWrite values from 0 to 255
-
-// cpp doesnt have ; or type declaration for '#define' for some reason
-// this is why I'll use anything other than c/cpp
 #define magnetReader 8
 #define motor1 A0
 #define motor2 A1
@@ -12,8 +8,8 @@ int magnetCount = 0;
 const int MAX_MAGNET_COUNT = 10;
 const int COUNT_DELAY = 250; // ms
 
-const int MIKNATIS_VAR = 1;
-const int MIKNATIS_YOK = 0;
+const int MAGNET_FOUND = 1;
+const int MAGNET_NOT_FOUND = 0;
 
 void setup() {
   pinMode(magnetReader, INPUT);
@@ -26,14 +22,14 @@ void setup() {
 void loop() {
   okunandeger = digitalRead(magnetReader);
   Serial.println(okunandeger);
-  if (okunandeger == MIKNATIS_VAR && magnetCount >= MAX_MAGNET_COUNT) {
+  if (okunandeger == MAGNET_FOUND && magnetCount >= MAX_MAGNET_COUNT) {
     magnetCount++;
     Serial.print("------ MIKNATIS SAYILDI, count:");
     Serial.print(magnetCount);
     Serial.println(" ------");
     git();
     delay(COUNT_DELAY);
-  } else if(okunandeger == MIKNATIS_YOK) {
+  } else if(okunandeger == MAGNET_NOT_FOUND) {
     // Serial.println("------ Haven't found a magnet, continuing... ------");
     // nothing else ig?
   } else {
@@ -57,5 +53,3 @@ void git() {
   analogWrite(motor1, 255);
   analogWrite(motor2, 255);
 }
-
-// kodu türkçe yazmaya başlayıp ing bitirdim lol
