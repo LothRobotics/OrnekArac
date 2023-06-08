@@ -46,8 +46,8 @@ void git() {
   analogWrite(enA, 255);
   analogWrite(enB, 255);
 
-  	digitalWrite(in1, HIGH);
-	digitalWrite(in2, LOW);
+  	digitalWrite(in1, LOW);
+	digitalWrite(in2, HIGH);
 	digitalWrite(in3, HIGH);
 	digitalWrite(in4, LOW);
 }

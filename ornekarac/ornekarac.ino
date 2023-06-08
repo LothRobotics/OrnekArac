@@ -32,21 +32,17 @@ void setup() {
 	pinMode(in3, OUTPUT);
 	pinMode(in4, OUTPUT);
 	
-	// Turn off motors
-	digitalWrite(in1, LOW);
-	digitalWrite(in2, LOW);
-	digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);
+	git();
 
   analogWrite(enA, 255);
 	analogWrite(enB, 255);
 }
 
 void loop() {
-  delay(16);
+  delay(8);
   okunandeger = digitalRead(magnetReader);
   // Serial.println(okunandeger);
-  if (okunandeger == MAGNET_FOUND && magnetCount >= MAX_MAGNET_COUNT) {
+  if (okunandeger == MAGNET_FOUND && magnetCount <= MAX_MAGNET_COUNT) {
     magnetCount++;
     Serial.print("------ MIKNATIS SAYILDI, count:");
     Serial.print(magnetCount);
@@ -56,7 +52,7 @@ void loop() {
   } else if(okunandeger == MAGNET_NOT_FOUND) {
     // Serial.println("------ Haven't found a magnet, continuing... ------");
     // nothing else ig?
-  } else {
+  } if(okunandeger != MAGNET_FOUND && okunandeger != MAGNET_NOT_FOUND) {
     Serial.println("------ ERR! GOT AN UNEXPECTED VALUE FROM READER ------");
   }
 
@@ -74,8 +70,8 @@ void dur() {
 
 void git() {
   Serial.println("------ GIDIYOR ------");
-	digitalWrite(in1, HIGH);
-	digitalWrite(in2, LOW);
+  digitalWrite(in1, LOW);
+	digitalWrite(in2, HIGH);
 	digitalWrite(in3, HIGH);
 	digitalWrite(in4, LOW);
 }
