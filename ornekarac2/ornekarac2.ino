@@ -7,6 +7,7 @@
 #define enB 3
 #define in3 5
 #define in4 4
+
 #define magnetReader 10
 #define buzzer 11
 
@@ -17,9 +18,14 @@ int okunandeger;
 int magnetCount = 0;
 int goSpeed = 200;
 
-const int MAX_MAGNET_COUNT = 10;
-const int COUNT_DELAY = 250; // ms
-const int MAX_SPEED = 120;
+const int MAX_MAGNET_COUNT = 39;
+
+const int MAGNET_OFFSET = 3; // Used for going high speed and start slowing down when necessary
+const int STOP_DELAY = 20;
+
+const int MAX_SPEED = 220;
+const int END_BASE_SPEED = 50;
+const int COUNT_DELAY = 100; // ms
 
 const int MAGNET_FOUND = 1;
 const int MAGNET_NOT_FOUND = 0;
@@ -34,8 +40,11 @@ void setup() {
 	pinMode(in3, OUTPUT);
 	pinMode(in4, OUTPUT);
   pinMode(buzzer, OUTPUT);
-	
+
+  delay(1000);
+  
 	git();
+  goSpeed = MAX_SPEED;
 
   analogWrite(enA, MAX_SPEED);
 	analogWrite(enB, MAX_SPEED);
@@ -66,14 +75,18 @@ void loop() {
 }
 
 void calculateSpeed() {
-  if (magnetCount <= MAX_MAGNET_COUNT * 0.5) {
+  if (magnetCount <= (MAX_MAGNET_COUNT * 0.5)) { // ilk yarı
     goSpeed = 255;
   } else if (magnetCount >= MAX_MAGNET_COUNT) {
     goSpeed = 0;
     Serial.println("------ REACHED DESTINATION ------");
   } else {
-    // maybe get rid of /2
-    goSpeed = 255 * (MAX_MAGNET_COUNT / 2 - magnetCount) / MAX_MAGNET_COUNT;
+    if (magnetCount >= (MAX_MAGNET_COUNT - MAGNET_OFFSET)) {
+      goSpeed = END_BASE_SPEED;
+    } else {
+      goSpeed = (int) 220 * (MAX_MAGNET_COUNT - magnetCount) / MAX_MAGNET_COUNT;
+    }
+    setSpeed();
   }
 }
 

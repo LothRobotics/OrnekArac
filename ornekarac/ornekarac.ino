@@ -13,20 +13,20 @@
 // 'en' is for controlling speed
 // 'in' is for controlling direction
 
-int okunandeger;
-int magnetCount = 0;
-int goSpeed = 200;
-
 const int MAX_MAGNET_COUNT = 39;
 
 const int MAGNET_OFFSET = 6; // Used for going high speed and start slowing down when necessary
 const int STOP_DELAY = 20;
-
 const int MAX_SPEED = 220;
+
 const int COUNT_DELAY = 100; // ms
 
 const int MAGNET_FOUND = 1;
 const int MAGNET_NOT_FOUND = 0;
+
+int okunandeger;
+int magnetCount = 0;
+int goSpeed = MAX_SPEED;
 
 void setup() {
   Serial.begin(9600);
@@ -41,8 +41,8 @@ void setup() {
 	
 	git();
 
-  analogWrite(enA, MAX_SPEED);
-	analogWrite(enB, MAX_SPEED);
+  analogWrite(enA, goSpeed);
+	analogWrite(enB, goSpeed);
 }
 
 void loop() {
@@ -57,13 +57,8 @@ void loop() {
     git();
     delay(COUNT_DELAY);
     digitalWrite(buzzer, LOW);
-  } else if(okunandeger == MAGNET_NOT_FOUND) {
-    // Serial.println("------ Haven't found a magnet, continuing... ------");
-    // nothing else ig?
-  } if(okunandeger != MAGNET_FOUND && okunandeger != MAGNET_NOT_FOUND) {
-    Serial.println("------ ERR! GOT AN UNEXPECTED VALUE FROM READER ------");
   }
-
+  
   if(magnetCount >= (MAX_MAGNET_COUNT - MAGNET_OFFSET)) {
     Serial.println("------ REACHED DESTINATION ------");
     dur();
@@ -73,7 +68,6 @@ void loop() {
 void dur() {
   Serial.println("DURDU.");
   delay(STOP_DELAY);  //  hızlı durmak için X ms bekle
-  
   analogWrite(enA, 0);
   analogWrite(enB, 0);
   digitalWrite(in1, LOW);
@@ -84,6 +78,8 @@ void dur() {
 
 void git() {
   Serial.println("------ GIDIYOR ------");
+  analogWrite(enA, goSpeed);
+  analogWrite(enB, goSpeed);
   digitalWrite(in1, LOW);
 	digitalWrite(in2, HIGH);
 	digitalWrite(in3, HIGH);
