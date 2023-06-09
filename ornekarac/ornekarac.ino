@@ -14,12 +14,13 @@
 // 'in' is for controlling direction
 
 const int MAX_MAGNET_COUNT = 39;
-
-const int MAGNET_OFFSET = 6; // Used for going high speed and start slowing down when necessary
-const int STOP_DELAY = 20;
+const int MAGNET_OFFSET = 6;  // Used for going high speed and start slowing down when necessary
 const int MAX_SPEED = 220;
 
-const int COUNT_DELAY = 100; // ms
+const int COUNT_DELAY = 100;  // delay when counted a magnet
+const int STOP_DELAY = 20;
+const int DRIFT_DELAY = 1350;   // ms
+const bool drift = false;
 
 const int MAGNET_FOUND = 1;
 const int MAGNET_NOT_FOUND = 0;
@@ -38,7 +39,9 @@ void setup() {
 	pinMode(in3, OUTPUT);
 	pinMode(in4, OUTPUT);
   pinMode(buzzer, OUTPUT);
-	
+
+ delay(2000);
+  
 	git();
 
   analogWrite(enA, goSpeed);
@@ -67,7 +70,12 @@ void loop() {
 
 void dur() {
   Serial.println("DURDU.");
-  delay(STOP_DELAY);  //  hızlı durmak için X ms bekle
+  if (drift) {
+    gerigit();
+    delay(DRIFT_DELAY);
+  } else {
+    delay(STOP_DELAY);  //  hızlı durmak için X ms bekle 
+  }
   analogWrite(enA, 0);
   analogWrite(enB, 0);
   digitalWrite(in1, LOW);
@@ -84,4 +92,11 @@ void git() {
 	digitalWrite(in2, HIGH);
 	digitalWrite(in3, HIGH);
 	digitalWrite(in4, LOW);
+}
+
+void gerigit() {
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 }
