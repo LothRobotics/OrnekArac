@@ -8,6 +8,7 @@
 #define in3 5
 #define in4 4
 #define magnetReader 10
+#define buzzer 11
 
 // 'en' is for controlling speed
 // 'in' is for controlling direction
@@ -16,9 +17,13 @@ int okunandeger;
 int magnetCount = 0;
 int goSpeed = 200;
 
-const int MAX_MAGNET_COUNT = 6;
+const int MAX_MAGNET_COUNT = 39;
+
+const int MAGNET_OFFSET = 6; // Used for going high speed and start slowing down when necessary
+const int STOP_DELAY = 20;
+
+const int MAX_SPEED = 220;
 const int COUNT_DELAY = 100; // ms
-const int MAX_SPEED = 120;
 
 const int MAGNET_FOUND = 1;
 const int MAGNET_NOT_FOUND = 0;
@@ -32,6 +37,7 @@ void setup() {
 	pinMode(in2, OUTPUT);
 	pinMode(in3, OUTPUT);
 	pinMode(in4, OUTPUT);
+  pinMode(buzzer, OUTPUT);
 	
 	git();
 
@@ -42,13 +48,15 @@ void setup() {
 void loop() {
   okunandeger = digitalRead(magnetReader);
   Serial.println(okunandeger);
-  if (okunandeger == MAGNET_FOUND && magnetCount <= MAX_MAGNET_COUNT) {
+  if (okunandeger == MAGNET_FOUND && magnetCount <= (MAX_MAGNET_COUNT - MAGNET_OFFSET)) {
     magnetCount++;
     Serial.print("------ MIKNATIS SAYILDI, count:");
     Serial.print(magnetCount);
     Serial.println(" ------");
+    digitalWrite(buzzer, HIGH);
     git();
     delay(COUNT_DELAY);
+    digitalWrite(buzzer, LOW);
   } else if(okunandeger == MAGNET_NOT_FOUND) {
     // Serial.println("------ Haven't found a magnet, continuing... ------");
     // nothing else ig?
@@ -56,7 +64,7 @@ void loop() {
     Serial.println("------ ERR! GOT AN UNEXPECTED VALUE FROM READER ------");
   }
 
-  if(magnetCount >= MAX_MAGNET_COUNT) {
+  if(magnetCount >= (MAX_MAGNET_COUNT - MAGNET_OFFSET)) {
     Serial.println("------ REACHED DESTINATION ------");
     dur();
   }
@@ -64,11 +72,7 @@ void loop() {
 
 void dur() {
   Serial.println("DURDU.");
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
-  delay(10);  //  hızlı durmak için 10ms geriye git
+  delay(STOP_DELAY);  //  hızlı durmak için X ms bekle
   
   analogWrite(enA, 0);
   analogWrite(enB, 0);
