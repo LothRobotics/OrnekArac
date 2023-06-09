@@ -18,7 +18,7 @@ const int MAGNET_OFFSET = 6;  // Used for going high speed and start slowing dow
 const int MAX_SPEED = 220;
 
 const int COUNT_DELAY = 100;  // delay when counted a magnet
-const int STOP_DELAY = 20;
+const int STOP_DELAY = 30;
 const int DRIFT_DELAY = 1350;   // ms
 const bool drift = false;
 
@@ -40,7 +40,7 @@ void setup() {
 	pinMode(in4, OUTPUT);
   pinMode(buzzer, OUTPUT);
 
- delay(2000);
+ delay(7000);
   
 	git();
 
